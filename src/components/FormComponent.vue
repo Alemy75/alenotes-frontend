@@ -73,6 +73,9 @@ form {
   background-color: white;
   width: calc(600px - 48px);
   max-width: 100%;
+  @media (max-width: 600px) {
+    width: calc(100% - 48px);
+  }
   padding: 20px;
   outline: 4px solid #9dbcff;
   & h3 {

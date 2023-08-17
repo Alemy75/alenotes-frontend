@@ -7,9 +7,9 @@
         <span class="date">{{ note.date }}</span>
       </div>
       <aside>
-        <span class="delete" @click="deleteNote(note.id)">
+        <button class="delete" @click="deleteNote(note.id)">
           <X />
-        </span>
+        </button>
       </aside>
     </article>
   </transition>
@@ -29,8 +29,48 @@ export default {
       required: true
     }
   },
+
   methods: {
-    ...mapActions(["getNotes", "deleteNote"])
+    ...mapActions(["getNotes", "deleteNote"]),  
   }
 };
 </script>
+
+<style lang="scss">
+article {
+  border: 2px solid rgba(144, 179, 255, 0.089);
+  padding: 15px 15px;
+  margin-bottom: 10px;
+  display: flex;
+  width: calc(100% - 34px);
+  justify-content: space-between;
+  h2 {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1em;
+    font-weight: normal;
+    color: rgb(66, 126, 255);
+  }
+  & div {
+    width: 85%;
+  }
+
+  & p {
+    margin: 10px 0;
+  }
+  & aside {
+    width: 15%;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+  }
+}
+
+.date {
+  font-size: 0.8rem;
+  background-color: rgb(66, 126, 255);
+  padding: 5px 10px;
+  border-radius: 3px;
+  color: white;
+}
+</style>

@@ -1,45 +1,18 @@
 <template>
-  <header>
-    <div class="container">
-      <section class="header">
-        <div class="logo">
-          <h1>Alenote</h1>
-          <span>Заметки, записи, мысли</span>
-        </div>
-        <nav>
-          <router-link class="a-prim" to="/">Главная</router-link>
-          <router-link v-if="this.$store.state.auth.isLogged" class="a-prim" to="/notes">Заметки</router-link>
-          <router-link v-if="!this.$store.state.auth.isLogged" class="a-prim" to="/login">Войти</router-link>
-          <button
-            v-if="this.$store.state.auth.isLogged"
-            @click="handleLogout"
-            class="a-prim"
-          >
-            Выйти
-          </button>
-        </nav>
-      </section>
-    </div>
-  </header>
+  <nav-component />
   <div class="container">
     <router-view />
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import NavComponent from './components/NavComponent.vue';
 
 export default {
-  methods: {
-    ...mapActions(["authLogout", "checkAuth"]),
-    handleLogout() {
-      this.authLogout()
-    }
-  },
-  mounted() {
-    this.checkAuth();
+  components: {
+    "nav-component": NavComponent
   }
-};
+}
 </script>
 
 <style lang="scss">
@@ -58,20 +31,6 @@ body {
   color: #333;
 }
 
-header {
-  background-color: rgba(144, 179, 255, 0.089);
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: all 0.3s ease;
-}
-
-.slide-enter,
-.slide-leave-to {
-  opacity: 0;
-  transform: translateY(20px);
-}
 
 .container {
   width: 600px;
@@ -100,6 +59,7 @@ a {
 }
 
 .a-prim {
+  position: relative;
   font-weight: bold;
   font-size: 0.8rem;
   &:not(:last-child) {
@@ -108,13 +68,15 @@ a {
   &::after {
     content: "";
     display: block;
+    position: absolute;
+    left: 0;
+    bottom: -5px;
     height: 2px;
     width: 0%;
     transition: all 0.2s ease-in-out;
     background-color: rgb(66, 126, 255);
     outline: 2px solid rgba(66, 126, 255, 0);
     border-radius: 10px;
-    margin-top: 2px;
   }
   &:hover {
     &::after {
@@ -124,12 +86,6 @@ a {
   }
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
 h1 {
   display: inline;
   margin-right: 8px;
@@ -179,13 +135,7 @@ textarea {
   }
 }
 
-nav {
-  display: flex;
-  align-items: center;
-}
-
 .delete {
-  width: 5%;
   &:hover {
     svg {
       cursor: pointer;

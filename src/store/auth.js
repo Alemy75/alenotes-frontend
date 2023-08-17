@@ -46,7 +46,7 @@ const auth = {
         payload.password
       )
         .then((user) => {
-          console.log(user);
+          router.push("/notes");
         })
         .catch((error) => {
           commit("SET_ERROR", error.code);
