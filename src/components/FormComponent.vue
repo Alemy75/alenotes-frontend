@@ -8,9 +8,15 @@
       </span>
     </div>
     <label for="title">Название</label>
-    <input v-model="title" placeholder="Введите название.." type="text" />
+    <input
+      class="input"
+      v-model="title"
+      placeholder="Введите название.."
+      type="text"
+    />
     <label for="content">Содержание</label>
     <textarea
+      class="textarea"
       ref="textarea"
       v-model="content"
       placeholder="Введите текст.."

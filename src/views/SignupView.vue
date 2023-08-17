@@ -2,9 +2,15 @@
   <form @submit.prevent="signupHandler" @keydown.enter="createNote">
     <h3>Регистрация</h3>
     <label for="email">Почта</label>
-    <input name="email" v-model="email" placeholder="Введите почту..." />
+    <input
+      class="input"
+      name="email"
+      v-model="email"
+      placeholder="Введите почту..."
+    />
     <label for="password">Пароль</label>
     <input
+      class="input"
       type="password"
       name="password"
       v-model="password"

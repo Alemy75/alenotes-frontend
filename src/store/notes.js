@@ -7,7 +7,8 @@ import {
   orderBy,
   doc,
   deleteDoc,
-  where
+  where,
+  setDoc
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
@@ -29,13 +30,24 @@ const notes = {
     },
     TOGGLE_FORM(state) {
       state.isFormOpen = !state.isFormOpen;
+    },
+    EDIT_NOTE(state, payload) {
+      const objectToUpdate = state.notes.find((obj) => obj.id === payload.id);
+      if (objectToUpdate) {
+        objectToUpdate.content = payload.content;
+        objectToUpdate.date = payload.date;
+      }
     }
   },
 
   actions: {
     async getNotes({ commit }) {
-      const auth = getAuth()
-      const q = query(collection(db, "notes"), orderBy("date", "desc"), where("uid", "==", auth.currentUser.uid));
+      const auth = getAuth();
+      const q = query(
+        collection(db, "notes"),
+        orderBy("date", "desc"),
+        where("uid", "==", auth.currentUser.uid)
+      );
       const querySnap = await getDocs(q);
       const payload = [];
       querySnap.forEach((doc) => {
@@ -53,12 +65,30 @@ const notes = {
     async addNote({ commit }, dataObj) {
       const auth = getAuth();
       const colRef = collection(db, "notes");
-      const docRef = await addDoc(colRef, {uid: auth.currentUser.uid, ...dataObj});
+      const docRef = await addDoc(colRef, {
+        uid: auth.currentUser.uid,
+        ...dataObj
+      });
       commit("ADD_NOTE", {
         id: docRef.id,
         uid: auth.currentUser.uid,
         dataObj
       });
+    },
+    async updateNote({ commit }, dataObj) {
+      const docRef = doc(db, "notes", dataObj.id);
+      let newDate = new Date().toLocaleString()
+      await setDoc(
+        docRef,
+        { content: dataObj.content, date: newDate },
+        { merge: true }
+      );
+      let commitObj = {
+        id: dataObj.id,
+        content: dataObj.content,
+        date: newDate
+      };
+      commit("EDIT_NOTE", commitObj);
     }
   },
 

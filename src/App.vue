@@ -99,6 +99,10 @@ button {
 input,
 textarea {
   all: unset;
+}
+
+.input,
+.textarea {
   width: calc(100% - 30px);
   display: block;
   padding: 10px 15px;
@@ -115,7 +119,7 @@ textarea {
   }
 }
 
-textarea {
+.textarea {
   overflow-wrap: break-word;
   word-wrap: break-word;
   resize: vertical;
@@ -132,15 +136,6 @@ textarea {
     border-radius: 5px;
     font-weight: bold;
     background-color: #c9daff77;
-  }
-}
-
-.delete {
-  &:hover {
-    svg {
-      cursor: pointer;
-      stroke: #9dbcff;
-    }
   }
 }
 

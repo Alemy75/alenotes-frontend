@@ -3,12 +3,28 @@
     <article>
       <div>
         <h2>{{ note.title }}</h2>
-        <p>{{ note.content }}</p>
+        <textarea
+          ref="textarea"
+          :class="{ textarea: isEditing }"
+          :readonly="!isEditing"
+          v-model="this.content"
+          >{{ note.content }}</textarea
+        >
         <span class="date">{{ note.date }}</span>
       </div>
       <aside>
-        <button class="delete" @click="deleteNote(note.id)">
-          <X />
+        <button class="icon-btn" @click="deleteNote(note.id)">
+          <X size="20px" />
+        </button>
+        <button v-if="!isEditing" class="icon-btn" @click="editHandler">
+          <FileEdit size="20px" :stroke-width="1.7" />
+        </button>
+        <button
+          v-if="isEditing"
+          class="icon-btn"
+          @click="updateHandler(note.id)"
+        >
+          <CheckCheck :stroke-width="1.5" />
         </button>
       </aside>
     </article>
@@ -17,11 +33,13 @@
 
 <script>
 import { mapActions } from "vuex";
-import { X } from "lucide-vue-next";
+import { X, FileEdit, CheckCheck } from "lucide-vue-next";
 
 export default {
   components: {
-    X: X
+    X,
+    FileEdit,
+    CheckCheck
   },
   props: {
     note: {
@@ -29,9 +47,35 @@ export default {
       required: true
     }
   },
-
+  data() {
+    return {
+      isEditing: false,
+      content: this.note.content
+    };
+  },
   methods: {
-    ...mapActions(["getNotes", "deleteNote"]),  
+    ...mapActions(["getNotes", "deleteNote", "updateNote"]),
+    resizeTextarea() {
+      const textarea = this.$refs.textarea;
+      textarea.style.height = "auto";
+      textarea.style.height = textarea.scrollHeight + "px";
+    },
+    editHandler() {
+      this.isEditing = true;
+      this.resizeTextarea();
+    },
+    updateHandler(id) {
+      this.updateNote({
+        id,
+        content: this.content
+      }).then(() => {
+        this.isEditing = false;
+      });
+      this.resizeTextarea();
+    }
+  },
+  mounted() {
+    this.resizeTextarea()
   }
 };
 </script>
@@ -55,8 +99,14 @@ article {
     width: 85%;
   }
 
-  & p {
+  & textarea {
+    display: block;
+    width: 100%;
     margin: 10px 0;
+    height: auto;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
+    padding: 0;   
   }
   & aside {
     width: 15%;
@@ -72,5 +122,14 @@ article {
   padding: 5px 10px;
   border-radius: 3px;
   color: white;
+}
+
+.icon-btn {
+  &:hover {
+    svg {
+      cursor: pointer;
+      stroke: #9dbcff;
+    }
+  }
 }
 </style>

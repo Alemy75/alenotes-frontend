@@ -1,11 +1,15 @@
 <template>
   <section class="list">
-    <note-component v-for="note in this.$store.state.notes.notes" :note="note" :key="note.id"/>
+    <note-component
+      v-for="note in this.$store.state.notes.notes"
+      :note="note"
+      :key="note.id"
+    />
   </section>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import NoteComponent from "./NoteComponent.vue";
 export default {
   components: {
@@ -13,7 +17,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getNotes"])
+    ...mapActions(["getNotes"]),
   },
 
   mounted() {
